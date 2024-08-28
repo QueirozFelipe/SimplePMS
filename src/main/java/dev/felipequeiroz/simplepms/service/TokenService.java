@@ -18,15 +18,16 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public String generateToken(User user) {
+    public String generateToken(Object object) {
         var algorithm = Algorithm.HMAC256(secret);
         try {
+            User user = (User) object;
             return JWT.create()
                     .withIssuer("dev.felipequeiroz.simplepms")
                     .withSubject(user.getUsername())
                     .withExpiresAt(expirationDate())
                     .sign(algorithm);
-        } catch (JWTCreationException ex) {
+        } catch (ClassCastException | JWTCreationException ex) {
             throw new RuntimeException("Unable to generate JWT Token", ex);
         }
     }

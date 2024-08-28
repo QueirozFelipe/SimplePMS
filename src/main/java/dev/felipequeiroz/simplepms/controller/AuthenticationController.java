@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,8 @@ public class AuthenticationController {
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO authenticationDTO) {
         try {
             var authenticationToken = new UsernamePasswordAuthenticationToken(authenticationDTO.username(), authenticationDTO.password());
-            var authentication = manager.authenticate(authenticationToken);
-            var JWTToken = tokenService.generateToken((User)authentication.getPrincipal());
+            Authentication authentication = manager.authenticate(authenticationToken);
+            var JWTToken = tokenService.generateToken(authentication.getPrincipal());
             return ResponseEntity.ok(new JWTTokenDTO(JWTToken));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
