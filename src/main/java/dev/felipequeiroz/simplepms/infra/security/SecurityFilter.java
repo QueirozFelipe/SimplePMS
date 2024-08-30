@@ -44,7 +44,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         if(autorizationHeader != null) {
             return autorizationHeader.replace("Bearer ", "");
         }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token ausente");
+        return null;
     }
 
 }
