@@ -1,9 +1,11 @@
 package dev.felipequeiroz.simplepms.service;
 
 import dev.felipequeiroz.simplepms.domain.Cliente;
+import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
 import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
 import dev.felipequeiroz.simplepms.repository.ClienteRepository;
 import dev.felipequeiroz.simplepms.validations.cliente.CadastrarClienteValidations;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -78,6 +80,44 @@ class ClienteServiceTest {
         URI uri = clienteService.criarUri(cliente, uriBuilder);
 
         assertEquals("http://localhost:8080/clientes/1", uri.toString());
+    }
+
+    @Test
+    @DisplayName("Deveria atualizar os dados do cliente ao atualizar com dados nao nulos")
+    void atualizarComDadosNaoNulos() {
+
+        AtualizacaoClienteDTO dto = new AtualizacaoClienteDTO(1l, "Novo nome", LocalDate.of(2000, 01, 01), "novo@email.com", "2222222222");
+        Cliente cliente = new Cliente(new CadastroClienteDTO("Nome", "123", LocalDate.of(1991,01,01), "test@test.com", "1111111111"));
+        cliente.setId(1L);
+        BDDMockito.given(clienteRepository.getReferenceById(dto.id())).willReturn(cliente);
+
+        Cliente clienteAtualizado = clienteService.atualizar(dto);
+
+        assertEquals(dto.id(), clienteAtualizado.getId());
+        assertEquals(dto.nomeCompleto(), clienteAtualizado.getNomeCompleto());
+        assertEquals(dto.dataDeNascimento(), clienteAtualizado.getDataDeNascimento());
+        assertEquals(dto.email(), clienteAtualizado.getEmail());
+        assertEquals(dto.telefone(), clienteAtualizado.getTelefone());
+
+    }
+
+    @Test
+    @DisplayName("Deveria manter os dados atuais do cliente ao atualizar com dados nulos")
+    void atualizarComDadosNulos() {
+
+        AtualizacaoClienteDTO dto = new AtualizacaoClienteDTO(1l, null, null, null, null);
+        Cliente cliente = new Cliente(new CadastroClienteDTO("Nome", "123", LocalDate.of(1991,01,01), "test@test.com", "1111111111"));
+        cliente.setId(1L);
+        BDDMockito.given(clienteRepository.getReferenceById(dto.id())).willReturn(cliente);
+
+        Cliente clienteAtualizado = clienteService.atualizar(dto);
+
+        assertEquals(cliente.getId(), clienteAtualizado.getId());
+        assertEquals(cliente.getNomeCompleto(), clienteAtualizado.getNomeCompleto());
+        assertEquals(cliente.getDataDeNascimento(), clienteAtualizado.getDataDeNascimento());
+        assertEquals(cliente.getEmail(), clienteAtualizado.getEmail());
+        assertEquals(cliente.getTelefone(), clienteAtualizado.getTelefone());
+
     }
 
 
