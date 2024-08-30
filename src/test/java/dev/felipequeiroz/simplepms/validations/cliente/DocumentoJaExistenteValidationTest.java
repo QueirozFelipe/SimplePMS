@@ -25,7 +25,7 @@ class DocumentoJaExistenteValidationTest {
     private DocumentoJaExistenteValidation validation;
 
     @Test
-    @DisplayName("Deve lançar exception se o documeto já existe no banco de dados")
+    @DisplayName("Deve lançar exception se o documento já existe no banco de dados")
     void validacaoDocumentoJaCadastrado() {
 
         BDDMockito.given(repository.existsByDocumento(dto.documento())).willReturn(true);
