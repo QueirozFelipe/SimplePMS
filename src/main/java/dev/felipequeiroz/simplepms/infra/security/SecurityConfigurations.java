@@ -18,7 +18,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfigurations {
 
     @Autowired
-    SecurityFilter securityFilter;
+    private SecurityFilter securityFilter;
+
+    @Autowired
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,6 +34,7 @@ public class SecurityConfigurations {
                             req.anyRequest().authenticated();
                         })
                         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                        .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint))
                         .build();
     }
 

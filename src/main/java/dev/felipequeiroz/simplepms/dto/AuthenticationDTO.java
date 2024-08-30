@@ -1,4 +1,10 @@
 package dev.felipequeiroz.simplepms.dto;
 
-public record AuthenticationDTO(String username, String password) {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record AuthenticationDTO(
+        @Schema(example = "admin")
+        String username,
+        @Schema(example = "admin")
+        String password) {
 }
