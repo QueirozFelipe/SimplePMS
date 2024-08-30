@@ -1,8 +1,11 @@
 package dev.felipequeiroz.simplepms.controller;
 
 import dev.felipequeiroz.simplepms.domain.Cliente;
+import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
 import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
 import dev.felipequeiroz.simplepms.service.ClienteService;
+import jakarta.persistence.EntityNotFoundException;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,7 +33,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class ClienteControllerTest {
 
     @Autowired
-    private JacksonTester<CadastroClienteDTO> jsonDto;
+    private JacksonTester<CadastroClienteDTO> jsonCadastroDto;
+    @Autowired
+    private JacksonTester<AtualizacaoClienteDTO> jsonAtualizacaoDto;
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -48,7 +54,7 @@ class ClienteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn().getResponse();
 
-        Assertions.assertEquals(400, response.getStatus());
+        assertEquals(400, response.getStatus());
 
     }
 
@@ -62,14 +68,50 @@ class ClienteControllerTest {
 
         MockHttpServletResponse response = mockMvc.perform(
                 MockMvcRequestBuilders.post("/clientes")
-                        .content(jsonDto.write(dto).getJson())
+                        .content(jsonCadastroDto.write(dto).getJson())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn().getResponse();
 
-        Assertions.assertEquals(201, response.getStatus());
+        assertEquals(201, response.getStatus());
 
     }
 
+    @Test
+    @DisplayName("Deveria devolver codigo 200 para solicitacoes de atualizacao de cadastro enviando um id valido")
+    @WithMockUser
+    void atualizarComIdValido() throws Exception {
+
+        AtualizacaoClienteDTO atualizacaoClienteDTO = new AtualizacaoClienteDTO(1l, "Novo nome", null, null, null);
+        Cliente cliente = new Cliente(new CadastroClienteDTO("Nome", "123", LocalDate.of(1991,01,01), "test@test.com", "1111111111"));
+        BDDMockito.given(clienteService.atualizar(atualizacaoClienteDTO)).willReturn(cliente);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.put("/clientes")
+                        .content(jsonAtualizacaoDto.write(atualizacaoClienteDTO).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria devolver codigo 404 para solicitacoes de atualizacao de cadastro enviando um id invalido")
+    @WithMockUser
+    void atualizarComIdInvalido() throws Exception {
+
+        AtualizacaoClienteDTO atualizacaoClienteDTO = new AtualizacaoClienteDTO(1l, "Novo nome", null, null, null);
+        Cliente cliente = new Cliente(new CadastroClienteDTO("Nome", "123", LocalDate.of(1991,01,01), "test@test.com", "1111111111"));
+        BDDMockito.given(clienteService.atualizar(atualizacaoClienteDTO)).willThrow(EntityNotFoundException.class);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.put("/clientes")
+                        .content(jsonAtualizacaoDto.write(atualizacaoClienteDTO).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        assertEquals(404, response.getStatus());
+    }
 
 
 }
