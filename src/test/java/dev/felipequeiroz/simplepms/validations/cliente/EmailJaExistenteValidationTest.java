@@ -18,10 +18,8 @@ class EmailJaExistenteValidationTest {
 
     @Mock
     private ClienteRepository repository;
-
     @Mock
     private CadastroClienteDTO dto;
-
     @InjectMocks
     private EmailJaExistenteValidation validation;
 

@@ -18,10 +18,8 @@ class TelefoneJaExistenteValidationTest {
 
     @Mock
     private ClienteRepository repository;
-
     @Mock
     private CadastroClienteDTO dto;
-
     @InjectMocks
     private TelefoneJaExistenteValidation validation;
 

@@ -19,10 +19,8 @@ class DocumentoJaExistenteValidationTest {
 
     @Mock
     private ClienteRepository repository;
-
     @Mock
     private CadastroClienteDTO dto;
-
     @InjectMocks
     private DocumentoJaExistenteValidation validation;
 
