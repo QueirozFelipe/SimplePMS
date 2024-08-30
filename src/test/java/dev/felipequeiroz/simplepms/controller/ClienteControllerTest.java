@@ -4,6 +4,7 @@ import dev.felipequeiroz.simplepms.domain.Cliente;
 import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
 import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
 import dev.felipequeiroz.simplepms.service.ClienteService;
+import jakarta.persistence.EntityNotFoundException;
 import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -92,6 +93,24 @@ class ClienteControllerTest {
 
         assertEquals(200, response.getStatus());
 
+    }
+
+    @Test
+    @DisplayName("Deveria devolver codigo 404 para solicitacoes de atualizacao de cadastro enviando um id invalido")
+    @WithMockUser
+    void atualizarComIdInvalido() throws Exception {
+
+        AtualizacaoClienteDTO atualizacaoClienteDTO = new AtualizacaoClienteDTO(1l, "Novo nome", null, null, null);
+        Cliente cliente = new Cliente(new CadastroClienteDTO("Nome", "123", LocalDate.of(1991,01,01), "test@test.com", "1111111111"));
+        BDDMockito.given(clienteService.atualizar(atualizacaoClienteDTO)).willThrow(EntityNotFoundException.class);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.put("/clientes")
+                        .content(jsonAtualizacaoDto.write(atualizacaoClienteDTO).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        assertEquals(404, response.getStatus());
     }
 
 
