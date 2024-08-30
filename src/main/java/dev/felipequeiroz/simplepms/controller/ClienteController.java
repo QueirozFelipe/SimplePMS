@@ -1,6 +1,7 @@
 package dev.felipequeiroz.simplepms.controller;
 
 import dev.felipequeiroz.simplepms.domain.Cliente;
+import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
 import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
 import dev.felipequeiroz.simplepms.dto.DetalhamentoClienteDTO;
 import dev.felipequeiroz.simplepms.repository.ClienteRepository;
@@ -10,10 +11,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -36,6 +34,14 @@ public class ClienteController {
         return ResponseEntity.created(uri).body(new DetalhamentoClienteDTO(cliente));
     }
 
-    
+    @PutMapping
+    @Transactional
+    public ResponseEntity<DetalhamentoClienteDTO> atualizar(@RequestBody @Valid AtualizacaoClienteDTO dto) {
+
+        Cliente cliente = clienteService.atualizar(dto);
+
+        return ResponseEntity.ok(new DetalhamentoClienteDTO(cliente));
+
+    }
 
 }
