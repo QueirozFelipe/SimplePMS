@@ -7,10 +7,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -33,7 +36,6 @@ public class SecurityFilter extends OncePerRequestFilter {
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        System.out.println(subject);
         filterChain.doFilter(request, response);
     }
 
@@ -42,7 +44,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         if(autorizationHeader != null) {
             return autorizationHeader.replace("Bearer ", "");
         }
-        return null;
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token ausente");
     }
 
 }

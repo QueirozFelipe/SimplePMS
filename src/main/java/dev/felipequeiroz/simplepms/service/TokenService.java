@@ -6,7 +6,9 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import dev.felipequeiroz.simplepms.domain.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -28,7 +30,7 @@ public class TokenService {
                     .withExpiresAt(expirationDate())
                     .sign(algorithm);
         } catch (ClassCastException | JWTCreationException ex) {
-            throw new RuntimeException("Unable to generate JWT Token", ex);
+            throw new RuntimeException("Não foi possivel gerar o Token JWT", ex);
         }
     }
 
@@ -41,7 +43,7 @@ public class TokenService {
                     .verify(JWTToken)
                     .getSubject();
         } catch (JWTVerificationException exception) {
-            throw new RuntimeException("JWT Token not valid or expired");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token JWT não válido ou expirado");
         }
     }
 
