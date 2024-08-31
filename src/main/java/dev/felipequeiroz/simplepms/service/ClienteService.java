@@ -45,4 +45,12 @@ public class ClienteService {
 
         return cliente;
     }
+
+    public void excluir(Long id) {
+
+        Cliente cliente = clienteRepository.getReferenceById(id);
+        if (!cliente.getAtivo())
+                throw new IllegalArgumentException("Este cadastro não está ativo e portanto não pode ser excluído.");
+        cliente.setAtivo(false);
+    }
 }

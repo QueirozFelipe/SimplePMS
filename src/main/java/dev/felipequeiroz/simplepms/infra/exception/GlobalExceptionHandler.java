@@ -29,6 +29,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity tratarIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity tratarMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         var erros = ex.getFieldErrors();

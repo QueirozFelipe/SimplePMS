@@ -44,4 +44,14 @@ public class ClienteController {
 
     }
 
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity excluir(@PathVariable Long id) {
+
+        clienteService.excluir(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+
 }
