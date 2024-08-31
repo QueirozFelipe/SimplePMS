@@ -18,12 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ClienteServiceTest {
 
     @Mock
     private ClienteRepository clienteRepository;
+    @Spy
+    private Cliente cliente = new Cliente();
     @Spy
     private List<CadastrarClienteValidations> validationsList = new ArrayList<>();
     @Mock
@@ -119,6 +124,34 @@ class ClienteServiceTest {
         assertEquals(cliente.getTelefone(), clienteAtualizado.getTelefone());
 
     }
+
+    @Test
+    @DisplayName("Deveria alterar o parametro ativo para false ao receber um id valido e cliente esta ativo")
+    void excluirComIdValidoEClienteAtivo() {
+
+        cliente.setId(1l);
+        cliente.setAtivo(true);
+        BDDMockito.given(clienteRepository.getReferenceById(1L)).willReturn(cliente);
+
+        clienteService.excluir(1L);
+
+        assertEquals(false, cliente.getAtivo());
+
+    }
+
+    @Test
+    @DisplayName("Deveria lancar exception ao receber um id valido e cliente esta inativo")
+    void excluirComIdValidoEClienteInativo() {
+
+        cliente.setId(1l);
+        cliente.setAtivo(false);
+        BDDMockito.given(clienteRepository.getReferenceById(1L)).willReturn(cliente);
+
+        assertThrows(IllegalArgumentException.class, () -> clienteService.excluir(1L));
+
+    }
+
+
 
 
 }
