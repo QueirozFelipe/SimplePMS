@@ -1,12 +1,14 @@
 package dev.felipequeiroz.simplepms.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.felipequeiroz.simplepms.domain.Cliente;
 import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
 import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
+import dev.felipequeiroz.simplepms.dto.DetalhamentoClienteDTO;
+import dev.felipequeiroz.simplepms.repository.ClienteRepository;
 import dev.felipequeiroz.simplepms.service.ClienteService;
 import jakarta.persistence.EntityNotFoundException;
-import org.checkerframework.checker.units.qual.C;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -24,9 +26,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,9 +43,13 @@ class ClienteControllerTest {
     @Autowired
     private JacksonTester<AtualizacaoClienteDTO> jsonAtualizacaoDto;
     @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
     private MockMvc mockMvc;
     @MockBean
     private ClienteService clienteService;
+    @MockBean
+    private ClienteRepository clienteRepository;
 
     @Test
     @DisplayName("Deveria devolver codigo 400 para solicitacoes de cadastro com erros de validacoes")
@@ -157,6 +166,29 @@ class ClienteControllerTest {
 
         assertEquals(400, response.getStatus());
 
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 200 e retornar os clientes ativos ao listar")
+    @WithMockUser
+    void listarClientes() throws Exception {
+
+        Cliente cliente = new Cliente();
+        cliente.setId(1L);
+        cliente.setNomeCompleto("Cliente");
+        List<Cliente> clientes = new ArrayList<>();
+        clientes.add(cliente);
+        List<DetalhamentoClienteDTO> listaDetalhamentoClienteDto = clientes.stream().map(DetalhamentoClienteDTO::new).toList();
+
+        when(clienteRepository.findAllByAtivoTrue()).thenReturn(clientes);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/clientes")
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+        assertEquals(listaDetalhamentoClienteDto, objectMapper.readValue(response.getContentAsString(), new TypeReference<List<DetalhamentoClienteDTO>>() {}));
+        
     }
 
 
