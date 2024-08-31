@@ -29,8 +29,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity tratarIllegalArgumentException(IllegalArgumentException ex) {
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity tratarIllegalStateException(IllegalStateException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 

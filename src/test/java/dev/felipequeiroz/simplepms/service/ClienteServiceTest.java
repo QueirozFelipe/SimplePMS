@@ -147,7 +147,7 @@ class ClienteServiceTest {
         cliente.setAtivo(false);
         BDDMockito.given(clienteRepository.getReferenceById(1L)).willReturn(cliente);
 
-        assertThrows(IllegalArgumentException.class, () -> clienteService.excluir(1L));
+        assertThrows(IllegalStateException.class, () -> clienteService.excluir(1L));
 
     }
 

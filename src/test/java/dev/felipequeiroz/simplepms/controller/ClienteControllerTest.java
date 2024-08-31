@@ -149,7 +149,7 @@ class ClienteControllerTest {
     @WithMockUser
     void excluirClienteInativoComIdvalido() throws Exception {
 
-        BDDMockito.willThrow(IllegalArgumentException.class).given(clienteService).excluir(any(Long.class));
+        BDDMockito.willThrow(IllegalStateException.class).given(clienteService).excluir(any(Long.class));
 
         MockHttpServletResponse response = mockMvc.perform(
                 MockMvcRequestBuilders.delete("/clientes/1")
