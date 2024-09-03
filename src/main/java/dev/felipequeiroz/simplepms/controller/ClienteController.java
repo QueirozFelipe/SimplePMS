@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/clientes")
@@ -23,6 +24,9 @@ public class ClienteController {
 
     @Autowired
     ClienteService clienteService;
+
+    @Autowired
+    ClienteRepository clienteRepository;
 
     @PostMapping
     @Transactional
@@ -51,6 +55,14 @@ public class ClienteController {
         clienteService.excluir(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<DetalhamentoClienteDTO>> listar() {
+
+        var lista = clienteRepository.findAllByAtivoTrue().stream().map(DetalhamentoClienteDTO::new).toList();
+        return ResponseEntity.ok(lista);
+
     }
 
 
