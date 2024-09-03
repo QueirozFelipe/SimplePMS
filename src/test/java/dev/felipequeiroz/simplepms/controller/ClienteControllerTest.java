@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -111,6 +112,51 @@ class ClienteControllerTest {
         ).andReturn().getResponse();
 
         assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 204 ao excluir um cadastro ativo com id valido")
+    @WithMockUser
+    void excluirClienteAtivoComIdValido() throws Exception {
+
+        BDDMockito.willAnswer(invocation -> null).given(clienteService).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/clientes/1")
+        ).andReturn().getResponse();
+
+        assertEquals(204, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 404 ao excluir um cadastro com id invalido")
+    @WithMockUser
+    void excluirClienteAtivoComIdInvalido() throws Exception {
+
+        BDDMockito.willThrow(EntityNotFoundException.class).given(clienteService).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/clientes/1")
+        ).andReturn().getResponse();
+
+        assertEquals(404, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 400 ao excluir um cadastro ja inativo com id valido")
+    @WithMockUser
+    void excluirClienteInativoComIdvalido() throws Exception {
+
+        BDDMockito.willThrow(IllegalStateException.class).given(clienteService).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/clientes/1")
+        ).andReturn().getResponse();
+
+        assertEquals(400, response.getStatus());
+
     }
 
 
