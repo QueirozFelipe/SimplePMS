@@ -30,6 +30,6 @@ public class CategoriaDeUhService {
     }
 
     public URI criarUri(CategoriaDeUh categoria, UriComponentsBuilder uriBuilder) {
-        return uriBuilder.path("categoria-de-uh/{id}").buildAndExpand(categoria.getId()).toUri();
+        return uriBuilder.path("categorias-de-uh/{id}").buildAndExpand(categoria.getId()).toUri();
     }
 }

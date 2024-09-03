@@ -18,7 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/categoria-de-uh")
+@RequestMapping("/categorias-de-uh")
 @SecurityRequirement(name = "bearer-key")
 public class CategoriaDeUhController {
 
@@ -32,7 +32,7 @@ public class CategoriaDeUhController {
         CategoriaDeUh categoria = service.cadastrar(dto);
         URI uri = service.criarUri(categoria, uriBuilder);
 
-        return ResponseEntity.ok(new DetalhamentoCategoriaDeUhDTO(categoria));
+        return ResponseEntity.created(uri).body(new DetalhamentoCategoriaDeUhDTO(categoria));
 
     }
 
