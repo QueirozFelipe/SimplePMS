@@ -188,7 +188,28 @@ class ClienteControllerTest {
 
         assertEquals(200, response.getStatus());
         assertEquals(listaDetalhamentoClienteDto, objectMapper.readValue(response.getContentAsString(), new TypeReference<List<DetalhamentoClienteDTO>>() {}));
-        
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 200 e retornar dados do cliente ao detalhar")
+    @WithMockUser
+    void detalharCliente() throws Exception {
+
+        Cliente cliente = new Cliente();
+        cliente.setId(1L);
+        cliente.setNomeCompleto("Cliente");
+        var detalhamentoClienteDTO = new DetalhamentoClienteDTO(cliente);
+
+        when(clienteRepository.getReferenceById(1L)).thenReturn(cliente);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/clientes/1")
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+        assertEquals(detalhamentoClienteDTO, objectMapper.readValue(response.getContentAsString(), new TypeReference<DetalhamentoClienteDTO>() {}));
+
     }
 
 

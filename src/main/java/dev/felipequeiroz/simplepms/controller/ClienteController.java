@@ -65,5 +65,13 @@ public class ClienteController {
 
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<DetalhamentoClienteDTO> detalhar(@PathVariable Long id) {
+
+        var cliente = new DetalhamentoClienteDTO(clienteRepository.getReferenceById(id));
+        return ResponseEntity.ok(cliente);
+
+    }
+
 
 }
