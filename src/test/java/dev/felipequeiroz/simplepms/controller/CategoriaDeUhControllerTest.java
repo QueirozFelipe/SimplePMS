@@ -192,5 +192,24 @@ class CategoriaDeUhControllerTest {
 
     }
 
+    @Test
+    @DisplayName("Deveria retornar codigo 200 e retornar dados da categoria ao detalhar")
+    @WithMockUser
+    void detalharCategoria() throws Exception {
+
+        CategoriaDeUh categoria = new CategoriaDeUh(1L, "Nome", 1, true);
+        var detalhamentoCategoriaDTO = new DetalhamentoCategoriaDeUhDTO(categoria);
+
+        when(repository.getReferenceById(1L)).thenReturn(categoria);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/categorias-de-uh/1")
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+        assertEquals(detalhamentoCategoriaDTO, objectMapper.readValue(response.getContentAsString(), new TypeReference<DetalhamentoCategoriaDeUhDTO>() {}));
+
+    }
+
 
 }
