@@ -1,5 +1,6 @@
 package dev.felipequeiroz.simplepms.domain;
 
+import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

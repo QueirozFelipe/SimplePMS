@@ -1,7 +1,7 @@
 create table unidades_habitacionais(
 
     id bigserial not null,
-    nomeUh varchar(255) not null,
+    nome_uh varchar(255) not null,
     categoria_de_uh_id bigint not null,
     ativo boolean,
 
