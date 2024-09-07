@@ -24,8 +24,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -37,6 +40,8 @@ class CategoriaDeUhControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private CategoriaDeUhService service;
+    @MockBean
+    private CategoriaDeUhRepository repository;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -121,5 +126,90 @@ class CategoriaDeUhControllerTest {
 
         assertEquals(404, response.getStatus());
     }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 204 ao excluir um cadastro ativo com id valido")
+    @WithMockUser
+    void excluirCategoriaAtivaComIdValido() throws Exception {
+
+        BDDMockito.willAnswer(invocation -> null).given(service).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/categorias-de-uh/1")
+        ).andReturn().getResponse();
+
+        assertEquals(204, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 404 ao excluir um cadastro com id invalido")
+    @WithMockUser
+    void excluirCategoriaAtivaComIdInvalido() throws Exception {
+
+        BDDMockito.willThrow(EntityNotFoundException.class).given(service).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/categorias-de-uh/1")
+        ).andReturn().getResponse();
+
+        assertEquals(404, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 400 ao excluir um cadastro ja inativo com id valido")
+    @WithMockUser
+    void excluirCategoriaInativaComIdvalido() throws Exception {
+
+        BDDMockito.willThrow(IllegalStateException.class).given(service).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/categorias-de-uh/1")
+        ).andReturn().getResponse();
+
+        assertEquals(400, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 200 e retornar as categorias ativas ao listar")
+    @WithMockUser
+    void listarCategorias() throws Exception {
+
+        CategoriaDeUh categoria = new CategoriaDeUh(1L, "Nome", 1, true);
+        List<CategoriaDeUh> categorias = new ArrayList<>();
+        categorias.add(categoria);
+        List<DetalhamentoCategoriaDeUhDTO> listaDetalhamentoCategoriaDTO = categorias.stream().map(DetalhamentoCategoriaDeUhDTO::new).toList();
+        when(repository.findAllByAtivoTrue()).thenReturn(categorias);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/categorias-de-uh")
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+        assertEquals(listaDetalhamentoCategoriaDTO, objectMapper.readValue(response.getContentAsString(), new TypeReference<List<DetalhamentoCategoriaDeUhDTO>>() {}));
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 200 e retornar dados da categoria ao detalhar")
+    @WithMockUser
+    void detalharCategoria() throws Exception {
+
+        CategoriaDeUh categoria = new CategoriaDeUh(1L, "Nome", 1, true);
+        var detalhamentoCategoriaDTO = new DetalhamentoCategoriaDeUhDTO(categoria);
+
+        when(repository.getReferenceById(1L)).thenReturn(categoria);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/categorias-de-uh/1")
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+        assertEquals(detalhamentoCategoriaDTO, objectMapper.readValue(response.getContentAsString(), new TypeReference<DetalhamentoCategoriaDeUhDTO>() {}));
+
+    }
+
 
 }

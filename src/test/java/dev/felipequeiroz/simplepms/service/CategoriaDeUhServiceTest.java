@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class CategoriaDeUhServiceTest {
@@ -102,7 +103,7 @@ class CategoriaDeUhServiceTest {
     }
 
     @Test
-    @DisplayName("Deveria manter os dados atuais do cliente ao atualizar com dados nulos")
+    @DisplayName("Deveria manter os dados atuais da categoria ao atualizar com dados nulos")
     void atualizarComDadosNulos() {
 
         AtualizacaoCategoriaDeUhDTO dto = new AtualizacaoCategoriaDeUhDTO(1L, null, null);
@@ -114,6 +115,32 @@ class CategoriaDeUhServiceTest {
         assertEquals(categoria.getId(), categoriaAtualizada.getId());
         assertEquals(categoria.getNomeCategoria(), categoriaAtualizada.getNomeCategoria());
         assertEquals(categoria.getQuantidadeDeLeitos(), categoriaAtualizada.getQuantidadeDeLeitos());
+
+    }
+
+    @Test
+    @DisplayName("Deveria alterar o parametro ativo para false ao receber um id valido e categoria esta ativa")
+    void excluirComIdValidoEClienteAtivo() {
+
+        categoriaDeUh.setId(1l);
+        categoriaDeUh.setAtivo(true);
+        BDDMockito.given(repository.getReferenceById(1L)).willReturn(categoriaDeUh);
+
+        categoriaService.excluir(1L);
+
+        assertEquals(false, categoriaDeUh.getAtivo());
+
+    }
+
+    @Test
+    @DisplayName("Deveria lancar exception ao receber um id valido e categoria esta inativa")
+    void excluirComIdValidoEClienteInativo() {
+
+        categoriaDeUh.setId(1l);
+        categoriaDeUh.setAtivo(false);
+        BDDMockito.given(repository.getReferenceById(1L)).willReturn(categoriaDeUh);
+
+        assertThrows(IllegalStateException.class, () -> categoriaService.excluir(1L));
 
     }
 
