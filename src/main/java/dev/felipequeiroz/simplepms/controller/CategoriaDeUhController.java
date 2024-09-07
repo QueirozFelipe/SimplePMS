@@ -36,11 +36,21 @@ public class CategoriaDeUhController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity atualizar(@RequestBody @Valid AtualizacaoCategoriaDeUhDTO dto) {
+    public ResponseEntity<DetalhamentoCategoriaDeUhDTO> atualizar(@RequestBody @Valid AtualizacaoCategoriaDeUhDTO dto) {
 
         CategoriaDeUh categoria = service.atualizar(dto);
 
         return ResponseEntity.ok(new DetalhamentoCategoriaDeUhDTO(categoria));
+
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity excluir(@PathVariable Long id) {
+
+        service.excluir(id);
+
+        return ResponseEntity.noContent().build();
 
     }
 

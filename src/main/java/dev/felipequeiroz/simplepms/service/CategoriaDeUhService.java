@@ -45,4 +45,14 @@ public class CategoriaDeUhService {
         return categoria;
 
     }
+
+    public void excluir(Long id) {
+
+        CategoriaDeUh categoria = repository.getReferenceById(id);
+        if(!categoria.getAtivo()) {
+            throw new IllegalStateException("Este cadastro não está ativo e portanto não pode ser excluído.");
+        }
+        categoria.setAtivo(false);
+
+    }
 }
