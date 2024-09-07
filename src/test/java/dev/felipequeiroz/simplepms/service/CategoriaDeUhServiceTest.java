@@ -1,9 +1,14 @@
 package dev.felipequeiroz.simplepms.service;
 
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
+import dev.felipequeiroz.simplepms.domain.Cliente;
+import dev.felipequeiroz.simplepms.dto.AtualizacaoCategoriaDeUhDTO;
+import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
 import dev.felipequeiroz.simplepms.dto.CadastroCategoriaDeUhDTO;
+import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.validations.categoriaDeUh.CadastrarCategoriaDeUhValidations;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -11,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +83,38 @@ class CategoriaDeUhServiceTest {
         URI uri = categoriaService.criarUri(categoria, uriBuilder);
 
         assertEquals("http://localhost:8080/categorias-de-uh/1", uri.toString());
+    }
+
+    @Test
+    @DisplayName("Deveria atualizar os dados da categoria ao atualizar com dados nao nulos")
+    void atualizarComDadosNaoNulos() {
+
+        AtualizacaoCategoriaDeUhDTO dto = new AtualizacaoCategoriaDeUhDTO(1L, "Novo nome", 3);
+        CategoriaDeUh categoria = new CategoriaDeUh(1L, "Nome atual", 2, true);
+        BDDMockito.given(repository.getReferenceById(dto.id())).willReturn(categoria);
+
+        CategoriaDeUh categoriaAtualizada = categoriaService.atualizar(dto);
+
+        assertEquals(dto.id(), categoriaAtualizada.getId());
+        assertEquals(dto.nomeCategoria(), categoriaAtualizada.getNomeCategoria());
+        assertEquals(dto.quantidadeDeLeitos(), categoriaAtualizada.getQuantidadeDeLeitos());
+
+    }
+
+    @Test
+    @DisplayName("Deveria manter os dados atuais do cliente ao atualizar com dados nulos")
+    void atualizarComDadosNulos() {
+
+        AtualizacaoCategoriaDeUhDTO dto = new AtualizacaoCategoriaDeUhDTO(1L, null, null);
+        CategoriaDeUh categoria = new CategoriaDeUh(1L, "Nome atual", 2, true);
+        BDDMockito.given(repository.getReferenceById(dto.id())).willReturn(categoria);
+
+        CategoriaDeUh categoriaAtualizada = categoriaService.atualizar(dto);
+
+        assertEquals(categoria.getId(), categoriaAtualizada.getId());
+        assertEquals(categoria.getNomeCategoria(), categoriaAtualizada.getNomeCategoria());
+        assertEquals(categoria.getQuantidadeDeLeitos(), categoriaAtualizada.getQuantidadeDeLeitos());
+
     }
 
 }
