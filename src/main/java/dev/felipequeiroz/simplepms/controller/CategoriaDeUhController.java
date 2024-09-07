@@ -1,6 +1,7 @@
 package dev.felipequeiroz.simplepms.controller;
 
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
+import dev.felipequeiroz.simplepms.dto.AtualizacaoCategoriaDeUhDTO;
 import dev.felipequeiroz.simplepms.dto.CadastroCategoriaDeUhDTO;
 import dev.felipequeiroz.simplepms.dto.DetalhamentoCategoriaDeUhDTO;
 import dev.felipequeiroz.simplepms.service.CategoriaDeUhService;
@@ -9,10 +10,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -33,6 +31,16 @@ public class CategoriaDeUhController {
         URI uri = service.criarUri(categoria, uriBuilder);
 
         return ResponseEntity.created(uri).body(new DetalhamentoCategoriaDeUhDTO(categoria));
+
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity atualizar(@RequestBody @Valid AtualizacaoCategoriaDeUhDTO dto) {
+
+        CategoriaDeUh categoria = service.atualizar(dto);
+
+        return ResponseEntity.ok(new DetalhamentoCategoriaDeUhDTO(categoria));
 
     }
 
