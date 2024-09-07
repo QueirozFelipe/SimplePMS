@@ -24,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,6 +40,8 @@ class CategoriaDeUhControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private CategoriaDeUhService service;
+    @MockBean
+    private CategoriaDeUhRepository repository;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -167,5 +171,26 @@ class CategoriaDeUhControllerTest {
         assertEquals(400, response.getStatus());
 
     }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 200 e retornar as categorias ativas ao listar")
+    @WithMockUser
+    void listarCategorias() throws Exception {
+
+        CategoriaDeUh categoria = new CategoriaDeUh(1L, "Nome", 1, true);
+        List<CategoriaDeUh> categorias = new ArrayList<>();
+        categorias.add(categoria);
+        List<DetalhamentoCategoriaDeUhDTO> listaDetalhamentoCategoriaDTO = categorias.stream().map(DetalhamentoCategoriaDeUhDTO::new).toList();
+        when(repository.findAllByAtivoTrue()).thenReturn(categorias);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/categorias-de-uh")
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+        assertEquals(listaDetalhamentoCategoriaDTO, objectMapper.readValue(response.getContentAsString(), new TypeReference<List<DetalhamentoCategoriaDeUhDTO>>() {}));
+
+    }
+
 
 }
