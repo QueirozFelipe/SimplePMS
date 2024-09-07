@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -120,6 +121,51 @@ class CategoriaDeUhControllerTest {
         ).andReturn().getResponse();
 
         assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 204 ao excluir um cadastro ativo com id valido")
+    @WithMockUser
+    void excluirCategoriaAtivaComIdValido() throws Exception {
+
+        BDDMockito.willAnswer(invocation -> null).given(service).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/categorias-de-uh/1")
+        ).andReturn().getResponse();
+
+        assertEquals(204, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 404 ao excluir um cadastro com id invalido")
+    @WithMockUser
+    void excluirCategoriaAtivaComIdInvalido() throws Exception {
+
+        BDDMockito.willThrow(EntityNotFoundException.class).given(service).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/categorias-de-uh/1")
+        ).andReturn().getResponse();
+
+        assertEquals(404, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 400 ao excluir um cadastro ja inativo com id valido")
+    @WithMockUser
+    void excluirCategoriaInativaComIdvalido() throws Exception {
+
+        BDDMockito.willThrow(IllegalStateException.class).given(service).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/categorias-de-uh/1")
+        ).andReturn().getResponse();
+
+        assertEquals(400, response.getStatus());
+
     }
 
 }
