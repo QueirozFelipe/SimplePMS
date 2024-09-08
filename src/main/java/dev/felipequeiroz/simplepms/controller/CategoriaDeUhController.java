@@ -7,6 +7,7 @@ import dev.felipequeiroz.simplepms.dto.DetalhamentoCategoriaDeUhDTO;
 import dev.felipequeiroz.simplepms.dto.DetalhamentoClienteDTO;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.service.CategoriaDeUhService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -29,6 +30,7 @@ public class CategoriaDeUhController {
     @Autowired
     private CategoriaDeUhRepository repository;
 
+    @Operation(summary = "Cadastra uma nova categoria de UH")
     @PostMapping
     @Transactional
     public ResponseEntity<DetalhamentoCategoriaDeUhDTO> cadastrar(@RequestBody @Valid CadastroCategoriaDeUhDTO dto, UriComponentsBuilder uriBuilder) {
@@ -40,6 +42,7 @@ public class CategoriaDeUhController {
 
     }
 
+    @Operation(summary = "Atualiza um cadastro de uma categoria de UH")
     @PutMapping
     @Transactional
     public ResponseEntity<DetalhamentoCategoriaDeUhDTO> atualizar(@RequestBody @Valid AtualizacaoCategoriaDeUhDTO dto) {
@@ -50,6 +53,7 @@ public class CategoriaDeUhController {
 
     }
 
+    @Operation(summary = "Marca como inativa um cadastro de categoria de UH")
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity excluir(@PathVariable Long id) {
@@ -60,6 +64,7 @@ public class CategoriaDeUhController {
 
     }
 
+    @Operation(summary = "Lista todas as categorias de UH ativas")
     @GetMapping
     public ResponseEntity<List<DetalhamentoCategoriaDeUhDTO>> listar() {
 
@@ -68,6 +73,7 @@ public class CategoriaDeUhController {
 
     }
 
+    @Operation(summary = "Detalha uma categoria de UH através do Id")
     @GetMapping("/{id}")
     public ResponseEntity<DetalhamentoCategoriaDeUhDTO> detalhar(@PathVariable Long id) {
 
