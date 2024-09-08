@@ -53,4 +53,14 @@ public class UnidadeHabitacionalService {
         return uh;
 
     }
+
+    public void excluir(Long id) {
+
+        UnidadeHabitacional uh = uhRepository.getReferenceById(id);
+        if (!uh.getAtivo())
+            throw new IllegalStateException("Este cadastro não está ativo e portanto não pode ser excluído.");
+        uh.setAtivo(false);
+    }
+
+
 }

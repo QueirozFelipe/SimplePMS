@@ -43,6 +43,15 @@ public class UnidadeHabitacionalController {
 
     }
 
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity excluir(@PathVariable Long id) {
+
+        service.excluir(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 }
