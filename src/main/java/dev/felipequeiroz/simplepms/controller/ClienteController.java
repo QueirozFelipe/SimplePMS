@@ -6,6 +6,7 @@ import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
 import dev.felipequeiroz.simplepms.dto.DetalhamentoClienteDTO;
 import dev.felipequeiroz.simplepms.repository.ClienteRepository;
 import dev.felipequeiroz.simplepms.service.ClienteService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -28,6 +29,7 @@ public class ClienteController {
     @Autowired
     ClienteRepository clienteRepository;
 
+    @Operation(summary = "Cadastra um novo cliente")
     @PostMapping
     @Transactional
     public ResponseEntity<DetalhamentoClienteDTO> cadastrar(@RequestBody @Valid CadastroClienteDTO dto, UriComponentsBuilder uriBuilder) {
@@ -38,6 +40,7 @@ public class ClienteController {
         return ResponseEntity.created(uri).body(new DetalhamentoClienteDTO(cliente));
     }
 
+    @Operation(summary = "Atualiza um cadastro de cliente")
     @PutMapping
     @Transactional
     public ResponseEntity<DetalhamentoClienteDTO> atualizar(@RequestBody @Valid AtualizacaoClienteDTO dto) {
@@ -48,6 +51,7 @@ public class ClienteController {
 
     }
 
+    @Operation(summary = "Marca como inativo um cadastro de cliente")
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity excluir(@PathVariable Long id) {
@@ -57,6 +61,7 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Lista todos os clientes ativos")
     @GetMapping
     public ResponseEntity<List<DetalhamentoClienteDTO>> listar() {
 
@@ -65,6 +70,7 @@ public class ClienteController {
 
     }
 
+    @Operation(summary = "Detalha um cliente através do Id")
     @GetMapping("/{id}")
     public ResponseEntity<DetalhamentoClienteDTO> detalhar(@PathVariable Long id) {
 
