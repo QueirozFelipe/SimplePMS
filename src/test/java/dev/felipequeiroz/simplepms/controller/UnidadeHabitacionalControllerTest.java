@@ -1,13 +1,11 @@
 package dev.felipequeiroz.simplepms.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
 import dev.felipequeiroz.simplepms.domain.Cliente;
 import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
-import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
-import dev.felipequeiroz.simplepms.dto.AtualizacaoUnidadeHabitacionalDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.*;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.repository.UnidadeHabitacionalRepository;
 import dev.felipequeiroz.simplepms.service.UnidadeHabitacionalService;
@@ -30,9 +28,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -179,6 +181,50 @@ class UnidadeHabitacionalControllerTest {
         ).andReturn().getResponse();
 
         assertEquals(400, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 200 e retornar as UHs ativas ao listar")
+    @WithMockUser
+    void listarUhs() throws Exception {
+
+        CategoriaDeUh categoria = new CategoriaDeUh(1L, "Categoria", 2, true);
+        UnidadeHabitacional uh = new UnidadeHabitacional(1L, "NomeUh", categoria, true);
+        BDDMockito.given(categoriaRepository.getReferenceById(anyLong())).willReturn(categoria);
+        List<UnidadeHabitacional> uhs = new ArrayList<>();
+        uhs.add(uh);
+        List<DetalhamentoUnidadeHabitacionalDTO> listaDetalhamentoUhDTO = uhs.stream().map(DetalhamentoUnidadeHabitacionalDTO::new).toList();
+
+        when(uhRepository.findAllByAtivoTrue()).thenReturn(uhs);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/unidades-habitacionais")
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+        assertEquals(listaDetalhamentoUhDTO, objectMapper.readValue(response.getContentAsString(), new TypeReference<List<DetalhamentoUnidadeHabitacionalDTO>>() {}));
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 200 e retornar dados da UH ao detalhar")
+    @WithMockUser
+    void detalharUh() throws Exception {
+
+        CategoriaDeUh categoria = new CategoriaDeUh(1L, "Categoria", 2, true);
+        UnidadeHabitacional uh = new UnidadeHabitacional(1L, "NomeUh", categoria, true);
+        BDDMockito.given(categoriaRepository.getReferenceById(anyLong())).willReturn(categoria);
+        DetalhamentoUnidadeHabitacionalDTO detalhamentoUHDTO = new DetalhamentoUnidadeHabitacionalDTO(uh);
+
+        when(uhRepository.getReferenceById(1L)).thenReturn(uh);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/unidades-habitacionais/1")
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+        assertEquals(detalhamentoUHDTO, objectMapper.readValue(response.getContentAsString(), new TypeReference<DetalhamentoUnidadeHabitacionalDTO>() {}));
 
     }
 
