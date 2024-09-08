@@ -3,6 +3,7 @@ package dev.felipequeiroz.simplepms.controller;
 import dev.felipequeiroz.simplepms.domain.Cliente;
 import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
 import dev.felipequeiroz.simplepms.dto.*;
+import dev.felipequeiroz.simplepms.repository.UnidadeHabitacionalRepository;
 import dev.felipequeiroz.simplepms.service.UnidadeHabitacionalService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/unidades-habitacionais")
@@ -21,6 +23,9 @@ public class UnidadeHabitacionalController {
 
     @Autowired
     private UnidadeHabitacionalService service;
+
+    @Autowired
+    private UnidadeHabitacionalRepository repository;
 
     @PostMapping
     @Transactional
@@ -50,6 +55,22 @@ public class UnidadeHabitacionalController {
         service.excluir(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<DetalhamentoUnidadeHabitacionalDTO>> listar() {
+
+        var lista = repository.findAllByAtivoTrue().stream().map(DetalhamentoUnidadeHabitacionalDTO::new).toList();
+        return ResponseEntity.ok(lista);
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DetalhamentoUnidadeHabitacionalDTO> detalhar(@PathVariable Long id) {
+
+        var uh = new DetalhamentoUnidadeHabitacionalDTO(repository.getReferenceById(id));
+        return ResponseEntity.ok(uh);
+
     }
 
 
