@@ -5,8 +5,7 @@ import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
 import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.repository.UnidadeHabitacionalRepository;
-import dev.felipequeiroz.simplepms.validations.cliente.CadastrarClienteValidations;
-import dev.felipequeiroz.simplepms.validations.unidadeHabitacional.CadastrarUnidadeHabitacionalValidation;
+import dev.felipequeiroz.simplepms.validations.unidadeHabitacional.CadastrarUnidadeHabitacionalValidations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,7 +23,7 @@ public class UnidadeHabitacionalService {
     private CategoriaDeUhRepository categoriaRepository;
 
     @Autowired
-    private List<CadastrarUnidadeHabitacionalValidation> validationsList;
+    private List<CadastrarUnidadeHabitacionalValidations> validationsList;
 
     public UnidadeHabitacional cadastrar(CadastroUnidadeHabitacionalDTO dto) {
 
@@ -35,7 +34,7 @@ public class UnidadeHabitacionalService {
 
     }
 
-    public URI criarURI(UnidadeHabitacional uh, UriComponentsBuilder uriBuilder) {
+    public URI criarUri(UnidadeHabitacional uh, UriComponentsBuilder uriBuilder) {
         return uriBuilder.path("unidades-habitacionais/{id}").buildAndExpand(uh.getId()).toUri();
     }
 }

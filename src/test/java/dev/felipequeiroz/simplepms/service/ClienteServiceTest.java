@@ -25,6 +25,7 @@ class ClienteServiceTest {
 
     @Mock
     private ClienteRepository clienteRepository;
+    @Mock
     @Spy
     private Cliente cliente = new Cliente();
     @Spy

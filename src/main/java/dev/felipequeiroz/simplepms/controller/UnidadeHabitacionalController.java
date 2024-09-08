@@ -1,9 +1,7 @@
 package dev.felipequeiroz.simplepms.controller;
 
-import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
 import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
 import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
-import dev.felipequeiroz.simplepms.dto.DetalhamentoCategoriaDeUhDTO;
 import dev.felipequeiroz.simplepms.dto.DetalhamentoUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.service.UnidadeHabitacionalService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,7 +30,7 @@ public class UnidadeHabitacionalController {
     public ResponseEntity cadastra(@RequestBody @Valid CadastroUnidadeHabitacionalDTO dto, UriComponentsBuilder uriBuilder) {
 
         UnidadeHabitacional uh = service.cadastrar(dto);
-        URI uri = service.criarURI(uh, uriBuilder);
+        URI uri = service.criarUri(uh, uriBuilder);
 
         return ResponseEntity.created(uri).body(new DetalhamentoUnidadeHabitacionalDTO(uh));
 
