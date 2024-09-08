@@ -4,14 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
 import dev.felipequeiroz.simplepms.domain.Cliente;
 import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
+import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
+import dev.felipequeiroz.simplepms.dto.AtualizacaoUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
 import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.repository.UnidadeHabitacionalRepository;
 import dev.felipequeiroz.simplepms.service.UnidadeHabitacionalService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,8 +40,8 @@ class UnidadeHabitacionalControllerTest {
 
     @Autowired
     private JacksonTester<CadastroUnidadeHabitacionalDTO> jsonCadastroDto;
-//    @Autowired
-//    private JacksonTester<AtualizacaoClienteDTO> jsonAtualizacaoDto;
+    @Autowired
+    private JacksonTester<AtualizacaoUnidadeHabitacionalDTO> jsonAtualizacaoDto;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -84,6 +89,50 @@ class UnidadeHabitacionalControllerTest {
         ).andReturn().getResponse();
 
         assertEquals(201, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria devolver codigo 200 para solicitacoes de atualizacao de cadastro enviando um id valido")
+    @WithMockUser
+    void atualizarComIdValido() throws Exception {
+
+        AtualizacaoUnidadeHabitacionalDTO atualizacaoUh = new AtualizacaoUnidadeHabitacionalDTO(1L, "Novo nome", 1L);
+        CategoriaDeUh categoria = new CategoriaDeUh(1L, "Categoria", 2, true);
+        UnidadeHabitacional uh = new UnidadeHabitacional(1L, "Nome atual", categoria, true);
+        BDDMockito.given(categoriaRepository.getReferenceById(atualizacaoUh.idCategoriaDeUh())).willReturn(categoria);
+        BDDMockito.given(service.atualizar(atualizacaoUh)).willReturn(uh);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.put("/unidades-habitacionais")
+                        .content(jsonAtualizacaoDto.write(atualizacaoUh).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria devolver codigo 404 para solicitacoes de atualizacao de cadastro enviando um id invalido")
+    @WithMockUser
+    void atualizarComIdInvalido() throws Exception {
+
+
+        AtualizacaoUnidadeHabitacionalDTO atualizacaoUh = new AtualizacaoUnidadeHabitacionalDTO(1L, "Novo nome", 1L);
+        CategoriaDeUh categoria = new CategoriaDeUh(1L, "Categoria", 2, true);
+        UnidadeHabitacional uh = new UnidadeHabitacional(1L, "Nome atual", categoria, true);
+        BDDMockito.given(categoriaRepository.getReferenceById(atualizacaoUh.idCategoriaDeUh())).willReturn(categoria);
+        BDDMockito.given(service.atualizar(atualizacaoUh)).willThrow(EntityNotFoundException.class);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.put("/unidades-habitacionais")
+                        .content(jsonAtualizacaoDto.write(atualizacaoUh).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+
+        assertEquals(404, response.getStatus());
 
     }
 
