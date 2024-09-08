@@ -1,7 +1,9 @@
 package dev.felipequeiroz.simplepms.service;
 
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
+import dev.felipequeiroz.simplepms.domain.Cliente;
 import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
+import dev.felipequeiroz.simplepms.dto.AtualizacaoUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.repository.UnidadeHabitacionalRepository;
@@ -12,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UnidadeHabitacionalService {
@@ -37,4 +40,27 @@ public class UnidadeHabitacionalService {
     public URI criarUri(UnidadeHabitacional uh, UriComponentsBuilder uriBuilder) {
         return uriBuilder.path("unidades-habitacionais/{id}").buildAndExpand(uh.getId()).toUri();
     }
+
+    public UnidadeHabitacional atualizar(AtualizacaoUnidadeHabitacionalDTO dto) {
+
+        UnidadeHabitacional uh = uhRepository.getReferenceById(dto.id());
+
+        Optional.ofNullable(dto.nomeUh()).ifPresent(uh::setNomeUh);
+        Optional.ofNullable(dto.idCategoriaDeUh()).ifPresent(
+                idCategoria -> uh.setCategoriaDeUh(categoriaRepository.getReferenceById(idCategoria))
+        );
+
+        return uh;
+
+    }
+
+    public void excluir(Long id) {
+
+        UnidadeHabitacional uh = uhRepository.getReferenceById(id);
+        if (!uh.getAtivo())
+            throw new IllegalStateException("Este cadastro não está ativo e portanto não pode ser excluído.");
+        uh.setAtivo(false);
+    }
+
+
 }
