@@ -1,11 +1,8 @@
 package dev.felipequeiroz.simplepms.validations.unidadeHabitacional;
 
-import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.CadastroUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.exception.BusinessValidationException;
-import dev.felipequeiroz.simplepms.repository.ClienteRepository;
 import dev.felipequeiroz.simplepms.repository.UnidadeHabitacionalRepository;
-import dev.felipequeiroz.simplepms.validations.cliente.DocumentoJaExistenteValidation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

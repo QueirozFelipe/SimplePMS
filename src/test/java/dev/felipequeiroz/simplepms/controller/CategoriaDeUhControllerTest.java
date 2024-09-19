@@ -3,8 +3,9 @@ package dev.felipequeiroz.simplepms.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
-import dev.felipequeiroz.simplepms.domain.Cliente;
-import dev.felipequeiroz.simplepms.dto.*;
+import dev.felipequeiroz.simplepms.dto.categoriaDeUh.AtualizacaoCategoriaDeUhDTO;
+import dev.felipequeiroz.simplepms.dto.categoriaDeUh.CadastroCategoriaDeUhDTO;
+import dev.felipequeiroz.simplepms.dto.categoriaDeUh.DetalhamentoCategoriaDeUhDTO;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.service.CategoriaDeUhService;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,7 +24,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

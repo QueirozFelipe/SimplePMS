@@ -1,9 +1,9 @@
 package dev.felipequeiroz.simplepms.controller;
 
 import dev.felipequeiroz.simplepms.domain.Cliente;
-import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
-import dev.felipequeiroz.simplepms.dto.DetalhamentoClienteDTO;
+import dev.felipequeiroz.simplepms.dto.cliente.AtualizacaoClienteDTO;
+import dev.felipequeiroz.simplepms.dto.cliente.CadastroClienteDTO;
+import dev.felipequeiroz.simplepms.dto.cliente.DetalhamentoClienteDTO;
 import dev.felipequeiroz.simplepms.repository.ClienteRepository;
 import dev.felipequeiroz.simplepms.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;

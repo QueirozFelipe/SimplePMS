@@ -1,6 +1,6 @@
 package dev.felipequeiroz.simplepms.validations.unidadeHabitacional;
 
-import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.CadastroUnidadeHabitacionalDTO;
 
 public interface CadastrarUnidadeHabitacionalValidations {
 

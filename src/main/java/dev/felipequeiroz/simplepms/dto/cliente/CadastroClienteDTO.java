@@ -1,4 +1,4 @@
-package dev.felipequeiroz.simplepms.dto;
+package dev.felipequeiroz.simplepms.dto.cliente;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -6,11 +6,14 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record AtualizacaoClienteDTO(
-        @NotNull
-        Long id,
+public record CadastroClienteDTO(
+        @NotBlank
         String nomeCompleto,
+        @NotBlank
+        String documento,
+        @NotNull
         LocalDate dataDeNascimento,
+        @Email
         String email,
         String telefone) {
 }
