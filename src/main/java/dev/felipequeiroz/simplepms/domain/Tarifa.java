@@ -1,5 +1,6 @@
 package dev.felipequeiroz.simplepms.domain;
 
+import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,5 +23,10 @@ public class Tarifa {
     @OneToMany(mappedBy = "tarifa", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TarifaDetalhamento> tarifaDetalhamentos;
     private Boolean ativo = true;
+
+    public Tarifa(CadastroTarifaDTO dto) {
+        this.nomeTarifa = dto.nomeTarifa();
+        this.valorBase = dto.valorBase();
+    }
 
 }

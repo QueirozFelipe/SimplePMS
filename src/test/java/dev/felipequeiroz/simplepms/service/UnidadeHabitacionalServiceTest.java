@@ -1,17 +1,12 @@
 package dev.felipequeiroz.simplepms.service;
 
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
-import dev.felipequeiroz.simplepms.domain.Cliente;
 import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
-import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
-import dev.felipequeiroz.simplepms.dto.AtualizacaoUnidadeHabitacionalDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.AtualizacaoUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.CadastroUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.repository.UnidadeHabitacionalRepository;
 import dev.felipequeiroz.simplepms.validations.unidadeHabitacional.CadastrarUnidadeHabitacionalValidations;
-import jakarta.persistence.EntityNotFoundException;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

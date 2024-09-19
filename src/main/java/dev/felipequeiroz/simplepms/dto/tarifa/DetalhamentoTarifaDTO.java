@@ -1,6 +1,7 @@
-package dev.felipequeiroz.simplepms.dto;
+package dev.felipequeiroz.simplepms.dto.tarifa;
 
 import dev.felipequeiroz.simplepms.domain.Tarifa;
+import dev.felipequeiroz.simplepms.dto.tarifa.DetalhamentoTarifaDetalhamentoDTO;
 
 import java.math.BigDecimal;
 import java.util.List;

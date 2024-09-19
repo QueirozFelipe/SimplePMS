@@ -1,10 +1,9 @@
 package dev.felipequeiroz.simplepms.service;
 
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
-import dev.felipequeiroz.simplepms.domain.Cliente;
 import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
-import dev.felipequeiroz.simplepms.dto.AtualizacaoUnidadeHabitacionalDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.AtualizacaoUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.CadastroUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.repository.UnidadeHabitacionalRepository;
 import dev.felipequeiroz.simplepms.validations.unidadeHabitacional.CadastrarUnidadeHabitacionalValidations;

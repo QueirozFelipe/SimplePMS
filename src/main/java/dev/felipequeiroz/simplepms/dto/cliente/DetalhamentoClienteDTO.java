@@ -1,4 +1,4 @@
-package dev.felipequeiroz.simplepms.dto;
+package dev.felipequeiroz.simplepms.dto.cliente;
 
 import dev.felipequeiroz.simplepms.domain.Cliente;
 

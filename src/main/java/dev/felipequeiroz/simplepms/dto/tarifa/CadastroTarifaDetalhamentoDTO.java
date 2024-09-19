@@ -1,4 +1,4 @@
-package dev.felipequeiroz.simplepms.dto;
+package dev.felipequeiroz.simplepms.dto.tarifa;
 
 import dev.felipequeiroz.simplepms.domain.ClassificacaoHospede;
 import jakarta.validation.constraints.NotBlank;

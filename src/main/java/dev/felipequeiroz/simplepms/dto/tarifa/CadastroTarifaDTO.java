@@ -1,4 +1,4 @@
-package dev.felipequeiroz.simplepms.dto;
+package dev.felipequeiroz.simplepms.dto.tarifa;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

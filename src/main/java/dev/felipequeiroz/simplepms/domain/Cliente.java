@@ -1,6 +1,6 @@
 package dev.felipequeiroz.simplepms.domain;
 
-import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
+import dev.felipequeiroz.simplepms.dto.cliente.CadastroClienteDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

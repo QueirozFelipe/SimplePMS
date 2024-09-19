@@ -1,11 +1,8 @@
 package dev.felipequeiroz.simplepms.controller;
 
 import dev.felipequeiroz.simplepms.domain.Tarifa;
-import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
-import dev.felipequeiroz.simplepms.dto.CadastroTarifaDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroUnidadeHabitacionalDTO;
-import dev.felipequeiroz.simplepms.dto.DetalhamentoTarifaDTO;
-import dev.felipequeiroz.simplepms.dto.DetalhamentoUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDTO;
+import dev.felipequeiroz.simplepms.dto.tarifa.DetalhamentoTarifaDTO;
 import dev.felipequeiroz.simplepms.service.TarifaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
