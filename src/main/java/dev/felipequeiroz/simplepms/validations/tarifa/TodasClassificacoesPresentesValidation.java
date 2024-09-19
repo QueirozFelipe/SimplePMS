@@ -3,11 +3,13 @@ package dev.felipequeiroz.simplepms.validations.tarifa;
 import dev.felipequeiroz.simplepms.domain.ClassificacaoHospede;
 import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDTO;
 import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDetalhamentoDTO;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class TodasClassificacoesPresentesValidation implements CadastrarTarifaValidations {
 
     @Override
