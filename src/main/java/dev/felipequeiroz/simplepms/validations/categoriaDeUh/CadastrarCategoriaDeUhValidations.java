@@ -1,6 +1,6 @@
 package dev.felipequeiroz.simplepms.validations.categoriaDeUh;
 
-import dev.felipequeiroz.simplepms.dto.CadastroCategoriaDeUhDTO;
+import dev.felipequeiroz.simplepms.dto.categoriaDeUh.CadastroCategoriaDeUhDTO;
 
 public interface CadastrarCategoriaDeUhValidations {
 

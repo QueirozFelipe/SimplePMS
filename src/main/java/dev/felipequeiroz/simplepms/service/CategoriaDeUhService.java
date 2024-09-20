@@ -1,8 +1,8 @@
 package dev.felipequeiroz.simplepms.service;
 
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
-import dev.felipequeiroz.simplepms.dto.AtualizacaoCategoriaDeUhDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroCategoriaDeUhDTO;
+import dev.felipequeiroz.simplepms.dto.categoriaDeUh.AtualizacaoCategoriaDeUhDTO;
+import dev.felipequeiroz.simplepms.dto.categoriaDeUh.CadastroCategoriaDeUhDTO;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.validations.categoriaDeUh.CadastrarCategoriaDeUhValidations;
 import org.springframework.beans.factory.annotation.Autowired;

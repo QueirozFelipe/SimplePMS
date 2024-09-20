@@ -1,6 +1,6 @@
 package dev.felipequeiroz.simplepms.validations.cliente;
 
-import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
+import dev.felipequeiroz.simplepms.dto.cliente.CadastroClienteDTO;
 import dev.felipequeiroz.simplepms.exception.BusinessValidationException;
 import dev.felipequeiroz.simplepms.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;

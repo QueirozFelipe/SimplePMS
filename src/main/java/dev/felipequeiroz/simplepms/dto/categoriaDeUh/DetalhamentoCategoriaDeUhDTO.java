@@ -1,4 +1,4 @@
-package dev.felipequeiroz.simplepms.dto;
+package dev.felipequeiroz.simplepms.dto.categoriaDeUh;
 
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
 

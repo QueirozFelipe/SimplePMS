@@ -1,8 +1,9 @@
 package dev.felipequeiroz.simplepms.controller;
 
-import dev.felipequeiroz.simplepms.domain.Cliente;
 import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
-import dev.felipequeiroz.simplepms.dto.*;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.AtualizacaoUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.CadastroUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.DetalhamentoUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.repository.UnidadeHabitacionalRepository;
 import dev.felipequeiroz.simplepms.service.UnidadeHabitacionalService;
 import io.swagger.v3.oas.annotations.Operation;

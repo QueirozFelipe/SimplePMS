@@ -1,11 +1,8 @@
 package dev.felipequeiroz.simplepms.service;
 
 import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
-import dev.felipequeiroz.simplepms.domain.Cliente;
-import dev.felipequeiroz.simplepms.dto.AtualizacaoCategoriaDeUhDTO;
-import dev.felipequeiroz.simplepms.dto.AtualizacaoClienteDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroCategoriaDeUhDTO;
-import dev.felipequeiroz.simplepms.dto.CadastroClienteDTO;
+import dev.felipequeiroz.simplepms.dto.categoriaDeUh.AtualizacaoCategoriaDeUhDTO;
+import dev.felipequeiroz.simplepms.dto.categoriaDeUh.CadastroCategoriaDeUhDTO;
 import dev.felipequeiroz.simplepms.repository.CategoriaDeUhRepository;
 import dev.felipequeiroz.simplepms.validations.categoriaDeUh.CadastrarCategoriaDeUhValidations;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package dev.felipequeiroz.simplepms.dto;
+package dev.felipequeiroz.simplepms.dto.unidadeHabitacional;
 
-import dev.felipequeiroz.simplepms.domain.CategoriaDeUh;
 import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
+import dev.felipequeiroz.simplepms.dto.categoriaDeUh.DetalhamentoCategoriaDeUhDTO;
 
 public record DetalhamentoUnidadeHabitacionalDTO(Long id, String nomeUh, DetalhamentoCategoriaDeUhDTO categoriaDeUh) {
 
