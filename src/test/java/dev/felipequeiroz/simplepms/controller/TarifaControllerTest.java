@@ -1,0 +1,90 @@
+package dev.felipequeiroz.simplepms.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.felipequeiroz.simplepms.domain.ClassificacaoHospede;
+import dev.felipequeiroz.simplepms.domain.Tarifa;
+import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDTO;
+import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDetalhamentoDTO;
+import dev.felipequeiroz.simplepms.repository.TarifaRepository;
+import dev.felipequeiroz.simplepms.service.TarifaService;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@AutoConfigureJsonTesters
+class TarifaControllerTest {
+
+    @Autowired
+    private JacksonTester<CadastroTarifaDTO> jsonCadastroTarifaDto;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private TarifaService service;
+    @MockBean
+    private TarifaRepository tarifaRepository;
+    @MockBean
+    private CadastroTarifaDetalhamentoDTO cadastroTarifaDetalhamentoDTO;
+
+    @Test
+    @DisplayName("Deveria devolver codigo 400 para solicitacoes de cadastro com erros de validacoes")
+    @WithMockUser
+    void cadastroComErrosDeValidacoes() throws Exception {
+
+        String json = "{}";
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.post("/tarifas")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        assertEquals(400, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria devolver codigo 201 para solicitacoes de cadastro sem erros de validacoes")
+    @WithMockUser
+    void cadastroSemErrosDeValidacoes() throws Exception {
+
+        CadastroTarifaDTO dto = new CadastroTarifaDTO("Tarifa", new BigDecimal("100.00"),
+                List.of(new CadastroTarifaDetalhamentoDTO(ClassificacaoHospede.ADULTO, new BigInteger("50"))));
+
+        Tarifa tarifa = new Tarifa(dto);
+        tarifa.setId(1L);
+
+        BDDMockito.given(service.cadastrar(dto)).willReturn(tarifa);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.post("/tarifas")
+                        .content(jsonCadastroTarifaDto.write(dto).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        assertEquals(201, response.getStatus());
+    }
+
+
+
+}

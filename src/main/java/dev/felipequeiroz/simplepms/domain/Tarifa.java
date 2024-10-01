@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,7 +22,7 @@ public class Tarifa {
     private String nomeTarifa;
     private BigDecimal valorBase;
     @OneToMany(mappedBy = "tarifa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TarifaDetalhamento> tarifaDetalhamentos;
+    private List<TarifaDetalhamento> tarifaDetalhamentos = new ArrayList<>();
     private Boolean ativo = true;
 
     public Tarifa(CadastroTarifaDTO dto) {
