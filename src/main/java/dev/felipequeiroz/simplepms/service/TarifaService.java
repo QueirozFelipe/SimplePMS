@@ -74,4 +74,13 @@ public class TarifaService {
 
         }
     }
+
+    public void excluir(Long id) {
+
+        Tarifa tarifa = tarifaRepository.getReferenceById(id);
+        if (!tarifa.getAtivo())
+            throw new IllegalStateException("Esta cadastro não está ativo e portanto não pode ser excluído.");
+        tarifa.setAtivo(false);
+
+    }
 }

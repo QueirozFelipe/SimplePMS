@@ -50,4 +50,14 @@ public class TarifaController {
 
         }
 
+        @Operation(summary = "Marca como inativa um cadastro de tarifa")
+        @DeleteMapping("/{id}")
+        @Transactional
+        public ResponseEntity excluir(@PathVariable Long id) {
+
+                service.excluir(id);
+
+                return ResponseEntity.noContent().build();
+        }
+
 }
