@@ -1,11 +1,14 @@
 package dev.felipequeiroz.simplepms.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.felipequeiroz.simplepms.domain.*;
 import dev.felipequeiroz.simplepms.dto.tarifa.AtualizacaoTarifaDTO;
 import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDTO;
 import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDetalhamentoDTO;
+import dev.felipequeiroz.simplepms.dto.tarifa.DetalhamentoTarifaDTO;
 import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.AtualizacaoUnidadeHabitacionalDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.DetalhamentoUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.repository.TarifaRepository;
 import dev.felipequeiroz.simplepms.service.TarifaService;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,10 +30,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -174,6 +180,46 @@ class TarifaControllerTest {
         ).andReturn().getResponse();
 
         assertEquals(400, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 200 e retornar as tarifas ativas ao listar")
+    @WithMockUser
+    void listarTarifas() throws Exception {
+
+        Tarifa tarifa = new Tarifa(1L, "Nome anterior", new BigDecimal("100.0"), List.of(tarifaDetalhamento), true);
+        List<Tarifa> tarifas = new ArrayList<>();
+        tarifas.add(tarifa);
+        List< DetalhamentoTarifaDTO> listaDetalhamentoTarifasDTO = tarifas.stream().map(DetalhamentoTarifaDTO::new).toList();
+
+        when(tarifaRepository.findAllByAtivoTrue()).thenReturn(tarifas);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/tarifas")
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+        assertEquals(listaDetalhamentoTarifasDTO, objectMapper.readValue(response.getContentAsString(), new TypeReference<List<DetalhamentoTarifaDTO>>() {}));
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 200 e retornar dados da tarifa ao detalhar")
+    @WithMockUser
+    void detalharTarifa() throws Exception {
+
+        Tarifa tarifa = new Tarifa(1L, "Nome anterior", new BigDecimal("100.0"), List.of(tarifaDetalhamento), true);
+        DetalhamentoTarifaDTO detalhamentoTarifaDTO = new DetalhamentoTarifaDTO(tarifa);
+
+        when(tarifaRepository.getReferenceById(1L)).thenReturn(tarifa);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.get("/tarifas/1")
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+        assertEquals(detalhamentoTarifaDTO, objectMapper.readValue(response.getContentAsString(), new TypeReference<DetalhamentoTarifaDTO>() {}));
 
     }
 
