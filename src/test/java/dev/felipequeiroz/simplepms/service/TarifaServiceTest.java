@@ -1,12 +1,13 @@
 package dev.felipequeiroz.simplepms.service;
 
-import dev.felipequeiroz.simplepms.domain.ClassificacaoHospede;
-import dev.felipequeiroz.simplepms.domain.Tarifa;
-import dev.felipequeiroz.simplepms.domain.TarifaDetalhamento;
+import dev.felipequeiroz.simplepms.domain.*;
+import dev.felipequeiroz.simplepms.dto.tarifa.AtualizacaoTarifaDTO;
 import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDTO;
 import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDetalhamentoDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.AtualizacaoUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.repository.TarifaRepository;
 import dev.felipequeiroz.simplepms.validations.tarifa.CadastrarTarifaValidations;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -89,6 +90,40 @@ class TarifaServiceTest {
         URI uri = tarifaService.criarUri(tarifa, uriBuilder);
 
         assertEquals("http://localhost:8080/tarifas/1", uri.toString());
+
+    }
+
+    @Test
+    @DisplayName("Deveria atualizar os dados da tarifa ao atualizar com dados nao nulos")
+    void atualizarComDadosNaoNulos() {
+
+        AtualizacaoTarifaDTO atualizacaoTarifaDTO = new AtualizacaoTarifaDTO(1L, "Novo nome", new BigDecimal("150.0"), null);
+        Tarifa tarifa = new Tarifa(1L, "Nome anterior", new BigDecimal("100.0"), List.of(tarifaDetalhamento), true);
+
+        BDDMockito.given(tarifaRepository.getReferenceById(atualizacaoTarifaDTO.id())).willReturn(tarifa);
+
+        Tarifa tarifaAtualizada = tarifaService.atualizar(atualizacaoTarifaDTO);
+
+        assertEquals(atualizacaoTarifaDTO.id(), tarifaAtualizada.getId());
+        assertEquals(atualizacaoTarifaDTO.nomeTarifa(), tarifaAtualizada.getNomeTarifa());
+        assertEquals(atualizacaoTarifaDTO.valorBase(), tarifaAtualizada.getValorBase());
+
+    }
+
+    @Test
+    @DisplayName("Deveria manter os dados atuais da tarifa ao atualizar com dados nulos")
+    void atualizarComDadosNulos() {
+
+        AtualizacaoTarifaDTO atualizacaoTarifaDTO = new AtualizacaoTarifaDTO(1L, null, null, null);
+        Tarifa tarifa = new Tarifa(1L, "Nome anterior", new BigDecimal("100.0"), List.of(tarifaDetalhamento), true);
+
+        BDDMockito.given(tarifaRepository.getReferenceById(atualizacaoTarifaDTO.id())).willReturn(tarifa);
+
+        Tarifa tarifaAtualizada = tarifaService.atualizar(atualizacaoTarifaDTO);
+
+        assertEquals(tarifa.getId(), tarifaAtualizada.getId());
+        assertEquals(tarifa.getNomeTarifa(), tarifaAtualizada.getNomeTarifa());
+        assertEquals(tarifa.getValorBase(), tarifaAtualizada.getValorBase());
 
     }
 

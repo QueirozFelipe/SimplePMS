@@ -1,15 +1,18 @@
 package dev.felipequeiroz.simplepms.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.felipequeiroz.simplepms.domain.ClassificacaoHospede;
-import dev.felipequeiroz.simplepms.domain.Tarifa;
+import dev.felipequeiroz.simplepms.domain.*;
+import dev.felipequeiroz.simplepms.dto.tarifa.AtualizacaoTarifaDTO;
 import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDTO;
 import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDetalhamentoDTO;
+import dev.felipequeiroz.simplepms.dto.unidadeHabitacional.AtualizacaoUnidadeHabitacionalDTO;
 import dev.felipequeiroz.simplepms.repository.TarifaRepository;
 import dev.felipequeiroz.simplepms.service.TarifaService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,6 +39,8 @@ class TarifaControllerTest {
     @Autowired
     private JacksonTester<CadastroTarifaDTO> jsonCadastroTarifaDto;
     @Autowired
+    private JacksonTester<AtualizacaoTarifaDTO> jsonAtualizacaoTarifaDto;
+    @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
@@ -45,6 +50,8 @@ class TarifaControllerTest {
     private TarifaRepository tarifaRepository;
     @MockBean
     private CadastroTarifaDetalhamentoDTO cadastroTarifaDetalhamentoDTO;
+    @Spy
+    private TarifaDetalhamento tarifaDetalhamento = new TarifaDetalhamento();
 
     @Test
     @DisplayName("Deveria devolver codigo 400 para solicitacoes de cadastro com erros de validacoes")
@@ -83,6 +90,45 @@ class TarifaControllerTest {
         ).andReturn().getResponse();
 
         assertEquals(201, response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Deveria devolver codigo 200 para solicitacoes de atualizacao de tarifa enviando um id valido")
+    @WithMockUser
+    void atualizarComIdValido() throws Exception {
+
+        AtualizacaoTarifaDTO  atualizacaoTarifaDTO = new AtualizacaoTarifaDTO(1L, "Novo nome", null, null);
+        Tarifa tarifa = new Tarifa(1L, "Nome anterior", new BigDecimal("100.0"), List.of(tarifaDetalhamento), true);
+
+        BDDMockito.given(service.atualizar(atualizacaoTarifaDTO)).willReturn(tarifa);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.put("/tarifas")
+                        .content(jsonAtualizacaoTarifaDto.write(atualizacaoTarifaDTO).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        assertEquals(200, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria devolver codigo 404 para solicitacoes de atualizacao de tarifa enviando um id invalido")
+    @WithMockUser
+    void atualizarComIdInvalido() throws Exception {
+
+        AtualizacaoTarifaDTO  atualizacaoTarifaDTO = new AtualizacaoTarifaDTO(1L, "Novo nome", null, null);
+        BDDMockito.given(service.atualizar(atualizacaoTarifaDTO)).willThrow(EntityNotFoundException.class);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.put("/tarifas")
+                        .content(jsonAtualizacaoTarifaDto.write(atualizacaoTarifaDTO).getJson())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+
+        assertEquals(404, response.getStatus());
+
     }
 
 
