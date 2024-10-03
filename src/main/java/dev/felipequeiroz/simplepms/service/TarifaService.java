@@ -4,7 +4,10 @@ import dev.felipequeiroz.simplepms.domain.Tarifa;
 import dev.felipequeiroz.simplepms.domain.TarifaDetalhamento;
 import dev.felipequeiroz.simplepms.domain.UnidadeHabitacional;
 import dev.felipequeiroz.simplepms.dto.tarifa.AtualizacaoTarifaDTO;
+import dev.felipequeiroz.simplepms.dto.tarifa.AtualizacaoTarifaDetalhamentoDTO;
 import dev.felipequeiroz.simplepms.dto.tarifa.CadastroTarifaDTO;
+import dev.felipequeiroz.simplepms.dto.tarifa.DetalhamentoTarifaDetalhamentoDTO;
+import dev.felipequeiroz.simplepms.repository.TarifaDetalhamentoRepository;
 import dev.felipequeiroz.simplepms.repository.TarifaRepository;
 import dev.felipequeiroz.simplepms.validations.tarifa.CadastrarTarifaValidations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ public class TarifaService {
 
     @Autowired
     private TarifaRepository tarifaRepository;
+
+    @Autowired
+    private TarifaDetalhamentoRepository tarifaDetalhamentoRepository;
 
     @Autowired
     private List<CadastrarTarifaValidations> validationsList;
@@ -55,9 +61,17 @@ public class TarifaService {
 
         Optional.ofNullable(dto.nomeTarifa()).ifPresent(tarifa::setNomeTarifa);
         Optional.ofNullable(dto.valorBase()).ifPresent(tarifa::setValorBase);
-        //Optional.ofNullable(dto.tarifaDetalhamentos()).ifPresent();
+        Optional.ofNullable(dto.tarifaDetalhamentos()).ifPresent(detalhamentos -> atualizarDetalhamento(dto, detalhamentos));
 
         return tarifa;
 
+    }
+
+    public void atualizarDetalhamento(AtualizacaoTarifaDTO tarifaDTO, List<AtualizacaoTarifaDetalhamentoDTO> detalhamentos) {
+        for (AtualizacaoTarifaDetalhamentoDTO atualizacaoTarifaDetalhamentoDTO : detalhamentos) {
+            TarifaDetalhamento detalhamento = tarifaDetalhamentoRepository.findByTarifaIdAndClassificacaoHospede(tarifaDTO.id(), atualizacaoTarifaDetalhamentoDTO.classificacaoHospede());
+            detalhamento.setValorHospedeAdicional(atualizacaoTarifaDetalhamentoDTO.valorHospedeAdicional());
+
+        }
     }
 }
