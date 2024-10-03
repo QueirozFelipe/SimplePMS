@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class TarifaServiceTest {
@@ -124,6 +125,32 @@ class TarifaServiceTest {
         assertEquals(tarifa.getId(), tarifaAtualizada.getId());
         assertEquals(tarifa.getNomeTarifa(), tarifaAtualizada.getNomeTarifa());
         assertEquals(tarifa.getValorBase(), tarifaAtualizada.getValorBase());
+
+    }
+
+    @Test
+    @DisplayName("Deveria alterar o parametro ativo para false ao receber um id valido e uh esta ativa")
+    void excluirComIdValidoEUhAtivo() {
+
+        tarifa.setId(1L);
+        tarifa.setAtivo(true);
+        BDDMockito.given(tarifaRepository.getReferenceById(1L)).willReturn(tarifa);
+
+        tarifaService.excluir(1L);
+
+        assertEquals(false, tarifa.getAtivo());
+
+    }
+
+    @Test
+    @DisplayName("Deveria lancar exception ao receber um id valido e uh esta inativa")
+    void excluirComIdValidoEUhInativo() {
+
+        tarifa.setId(1L);
+        tarifa.setAtivo(false);
+        BDDMockito.given(tarifaRepository.getReferenceById(1L)).willReturn(tarifa);
+
+        assertThrows(IllegalStateException.class, () -> tarifaService.excluir(1L));
 
     }
 

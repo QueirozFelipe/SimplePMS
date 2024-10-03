@@ -30,6 +30,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -128,6 +129,51 @@ class TarifaControllerTest {
 
 
         assertEquals(404, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 204 ao excluir um cadastro ativo com id valido")
+    @WithMockUser
+    void excluirTarifaAtivaComIdValido() throws Exception {
+
+        BDDMockito.willAnswer(invocation -> null).given(service).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/tarifas/1")
+        ).andReturn().getResponse();
+
+        assertEquals(204, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 404 ao excluir um cadastro com id invalido")
+    @WithMockUser
+    void excluirTarifaAtivaComIdInvalido() throws Exception {
+
+        BDDMockito.willThrow(EntityNotFoundException.class).given(service).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/tarifas/1")
+        ).andReturn().getResponse();
+
+        assertEquals(404, response.getStatus());
+
+    }
+
+    @Test
+    @DisplayName("Deveria retornar codigo 400 ao excluir um cadastro ja inativo com id valido")
+    @WithMockUser
+    void excluirTarifaInativaComIdvalido() throws Exception {
+
+        BDDMockito.willThrow(IllegalStateException.class).given(service).excluir(any(Long.class));
+
+        MockHttpServletResponse response = mockMvc.perform(
+                MockMvcRequestBuilders.delete("/tarifas/1")
+        ).andReturn().getResponse();
+
+        assertEquals(400, response.getStatus());
 
     }
 
